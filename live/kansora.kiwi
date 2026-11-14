@@ -152,7 +152,6 @@
 		<package name="dracut-live"/>
 		<package name="glibc-all-langpacks"/>
 		<package name="isomd5sum"/>
-		<package name="livesys-scripts"/>
 		<package name="kansora-live"/>
 		<package name="grub2-efi-x64-cdboot"/>
 		<ignore name="device-mapper-multipath"/>
