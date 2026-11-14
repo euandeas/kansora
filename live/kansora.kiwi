@@ -104,9 +104,8 @@
 		<package name="udisks2-btrfs"/>
 		<package name="langpacks-en"/>
 		<ignore name="kernel-*debug*"/>
-		<!-- Dux's development builds (installed systems exclude them through
-		     /usr/share/dnf5/repos.override.d/80-kansora-dux.repo): dux-greeter-git
-		     provides dux-greeter at a higher epoch -->
+		<!-- Dux's development builds stay out of the image: dux-greeter-git
+		     provides dux-greeter at a higher epoch, so dnf would pick it -->
 		<ignore name="dux-greeter-git"/>
 		<ignore name="dux-files-git"/>
 		<ignore name="dux-calendar-git"/>
