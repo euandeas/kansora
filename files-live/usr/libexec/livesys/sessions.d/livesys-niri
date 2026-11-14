@@ -23,4 +23,31 @@ mkdir -p /home/liveuser/.local/share/applications/
 cp /usr/share/applications/liveinst.desktop /home/liveuser/.local/share/applications/
 sed -i 's/NoDisplay=true/NoDisplay=false/' /home/liveuser/.local/share/applications/liveinst.desktop
 
+# ...and pinned on the bar: an Apps Dock widget after the workspaces, holding the
+# installer. Written as Kansora's DMS defaults plus those two changes; kansora-dots
+# only seeds missing files, so the first login keeps them (and Dux's welcome).
+python3 - << 'DMS_EOF' || :
+import json, os
+dots = "/usr/share/kansora/dots/dms"
+home = "/home/liveuser"
+
+with open(f"{dots}/settings.json") as f:
+    settings = json.load(f)
+for bar in settings.get("barConfigs", []):
+    left = bar.setdefault("leftWidgets", [])
+    ids = [w if isinstance(w, str) else w.get("id") for w in left]
+    at = ids.index("workspaceSwitcher") + 1 if "workspaceSwitcher" in ids else len(left)
+    left.insert(at, {"id": "appsDock", "enabled": True})
+
+with open(f"{dots}/session.json") as f:
+    session = json.load(f)
+session["barPinnedApps"] = ["liveinst"]
+
+for path, data in ((f"{home}/.config/dms/settings.json", settings),
+                   (f"{home}/.local/state/dms/session.json", session)):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w") as f:
+        json.dump(data, f, indent=2)
+DMS_EOF
+
 chown --recursive liveuser:liveuser /home/liveuser/
