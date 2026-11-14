@@ -234,6 +234,7 @@ fi
 
 %files repos
 %config(noreplace) %{_sysconfdir}/yum.repos.d/*.repo
+%{_datadir}/dnf5/repos.override.d/80-kansora-dux.repo
 
 %files codecs
 # metapackage

@@ -104,6 +104,14 @@
 		<package name="udisks2-btrfs"/>
 		<package name="langpacks-en"/>
 		<ignore name="kernel-*debug*"/>
+		<!-- Dux's development builds (installed systems exclude them through
+		     /usr/share/dnf5/repos.override.d/80-kansora-dux.repo): dux-greeter-git
+		     provides dux-greeter at a higher epoch -->
+		<ignore name="dux-greeter-git"/>
+		<ignore name="dux-files-git"/>
+		<ignore name="dux-calendar-git"/>
+		<ignore name="dux-qt-base-git"/>
+		<ignore name="quickshell-git"/>
 		<ignore name="PackageKit-gstreamer-plugin"/>
 		<ignore name="ffmpeg-free"/>
 		<ignore name="mesa-va-drivers"/>

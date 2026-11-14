@@ -61,7 +61,8 @@ check_packages() {
 
 # --- resolve -------------------------------------------------------------------
 # Pulled in by weak deps but replaced by DMS / Ghostty
-UNWANTED=(alacritty fuzzel swaylock swayidle swaybg waybar mako foot kitty sos dracut-config-rescue)
+UNWANTED=(alacritty fuzzel swaylock swayidle swaybg waybar mako foot kitty sos dracut-config-rescue
+          dux-greeter-git dux-files-git quickshell-git)
 
 write_repos() { # write_repos <dir>: the repos live/kansora.kiwi installs from
     local d="$1"
