@@ -55,7 +55,7 @@ mkdir -p "$work"
 check_packages() {
     "$kansora/build-scripts/build-repo" "$kdots" "$work/build" || return 1
     if command -v rpmlint >/dev/null; then
-        rpmlint "$work"/build/repo/*.rpm || echo "rpmlint: findings above are advisory"
+        rpmlint "$work"/build/repo/"$FEDORA_VERSION"/*.rpm || echo "rpmlint: findings above are advisory"
     fi
 }
 
@@ -118,7 +118,7 @@ PYEOF
 }
 
 check_resolve() {
-    compgen -G "$work/build/repo/kansora-[0-9]*.rpm" >/dev/null || { echo "resolve: needs the packages check"; return 1; }
+    compgen -G "$work/build/repo/$FEDORA_VERSION/kansora-[0-9]*.rpm" >/dev/null || { echo "resolve: needs the packages check"; return 1; }
     local v ok=0 root="$work/resolve-root" reposdir="$work/resolve-repos" log
     write_repos "$reposdir"
     # live: everything kiwi installs into the image, which is what installs copy
@@ -131,7 +131,7 @@ check_resolve() {
         # The freshly built RPMs stand in for the GitHub Pages repo (kiwi pulls
         # kansora, kansora-live etc. from there)
         local rpm built=()
-        for rpm in "$work"/build/repo/kansora*.rpm; do
+        for rpm in "$work"/build/repo/"$FEDORA_VERSION"/kansora*.rpm; do
             [[ "$rpm" == */kansora-nvidia-[0-9]* && "$v" != nvidia ]] && continue
             built+=("$rpm")
         done
@@ -173,7 +173,7 @@ check_resolve() {
     want="$(dnf repoquery -q --releasever="$FEDORA_VERSION" --setopt=reposdir="$reposdir" \
         --setopt=cachedir="$work/dnf-cache" --latest-limit=1 --qf '%{version}-%{release}\n' \
         fedora-release-common 2>/dev/null | tail -1)"
-    have="$(rpm -qp --provides "$work"/build/repo/kansora-release-identity-*.rpm 2>/dev/null \
+    have="$(rpm -qp --provides "$work"/build/repo/"$FEDORA_VERSION"/kansora-release-identity-*.rpm 2>/dev/null \
         | sed -n 's/^fedora-release-identity = //p')"
     if [[ -n "$want" && "$want" == "$have" ]]; then
         echo "resolve: kansora-release-identity matches fedora-release-common $want"

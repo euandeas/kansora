@@ -10,10 +10,6 @@ BuildArch:      noarch
 
 BuildRequires:  systemd-rpm-macros
 
-# Renamed from Hafnium in 0.2.0: replace the old packages on upgrade
-Obsoletes:      hafnium < 0.2
-Provides:       hafnium = %{version}-%{release}
-
 Requires:       kansora-repos = %{version}-%{release}
 Requires:       kansora-dots
 Requires:       kansora-codecs = %{version}-%{release}
@@ -100,9 +96,6 @@ and wallpapers, a quiet Flexoki boot splash, presets, the default terminal, and 
 
 %package repos
 Summary:        Package repositories used by Kansora
-# Renamed from Hafnium in 0.2.0: replace the old packages on upgrade
-Obsoletes:      hafnium-repos < 0.2
-Provides:       hafnium-repos = %{version}-%{release}
 Requires:       rpmfusion-free-release
 Requires:       rpmfusion-nonfree-release
 Requires:       terra-release
@@ -112,9 +105,6 @@ plus the RPM Fusion and Terra release packages.
 
 %package codecs
 Summary:        Full multimedia codecs for Kansora (RPM Fusion)
-# Renamed from Hafnium in 0.2.0: replace the old packages on upgrade
-Obsoletes:      hafnium-codecs < 0.2
-Provides:       hafnium-codecs = %{version}-%{release}
 Requires:       kansora-repos = %{version}-%{release}
 Requires:       ffmpeg
 Requires:       gstreamer1-plugin-libav
@@ -128,9 +118,6 @@ Intel from RPM Fusion. Replaces Fedora's ffmpeg-free.
 
 %package nvidia
 Summary:        NVIDIA driver setup for Kansora (RPM Fusion akmod)
-# Renamed from Hafnium in 0.2.0: replace the old packages on upgrade
-Obsoletes:      hafnium-nvidia < 0.2
-Provides:       hafnium-nvidia = %{version}-%{release}
 Requires:       kansora = %{version}-%{release}
 Requires:       akmod-nvidia
 Requires:       xorg-x11-drv-nvidia-cuda
@@ -171,15 +158,14 @@ ln -s ../../..%{_datadir}/fontconfig/conf.avail/50-kansora-monospace.conf \
     %{buildroot}%{_sysconfdir}/fonts/conf.d/50-kansora-monospace.conf
 
 %post
-%systemd_post kansora-flathub.service
 # Every install and upgrade: point greetd at dms-greeter unless it already is.
 %{_libexecdir}/kansora/setup-greetd || :
 if [ "$1" -eq 1 ]; then
-    # First install: boot to the greeter and enable Kansora's presets.
-    systemctl preset greetd.service power-profiles-daemon.service bluetooth.service \
-        dnf5-automatic.timer systemd-resolved.service NetworkManager-wait-online.service \
-        flatpak-add-fedora-repos.service >/dev/null 2>&1 || :
-    systemctl --global preset dms.service dsearch.service >/dev/null 2>&1 || :
+    # First install: apply Kansora's presets (the units its preset files list),
+    # boot to the greeter
+    units() { sed -n 's/^\(enable\|disable\) \([^ ]*\)$/\2/p' "$1"; }
+    systemctl preset $(units %{_presetdir}/80-kansora.preset) >/dev/null 2>&1 || :
+    systemctl --global preset $(units %{_userpresetdir}/80-kansora.preset) >/dev/null 2>&1 || :
     systemctl set-default graphical.target >/dev/null 2>&1 || :
     # Quiet boot: Flexoki splash, picked up by the next initramfs build
     plymouth-set-default-theme kansora >/dev/null 2>&1 || :

@@ -15,10 +15,9 @@
   the system says Kansora while `ID=fedora` stays. `fedora-release-common` requires an
   identity of its exact version-release, so `build-repo` builds it per Fedora release
   from that release's own os-release, and the nightly build picks up Fedora's updates.
-- **Per-release repos:** `repo/<N>/` holds the same packages plus the identity for
-  Fedora N, and `kansora.repo` points at `repo/$releasever/`. `repo/` itself is the
-  current release (`FEDORA_VERSION`), for the installer and older `kansora.repo` files.
-  The next release gets a `repo/<N+1>/` as soon as Fedora's repos have it.
+- **Per-release repos:** `repo/<N>/` holds the packages plus the identity for Fedora N,
+  and `kansora.repo` and the live ISO both point at `repo/$releasever/`. The next
+  release gets a `repo/<N+1>/` as soon as Fedora's repos have it.
 - **Updates:** installed systems pull new packages from those repos with `dnf upgrade`.
 
 Packages are versioned `0.2.0-<commits>.git<sha>`, so every push is an upgrade.
@@ -50,7 +49,7 @@ they go out with the nightly build.
 | Command | Does |
 |---|---|
 | `just check` | all checks, in a Fedora container |
-| `just repo` | build the RPMs and repo into `out/repo` |
+| `just repo` | build the RPMs and per-release repos into `out/repo/<N>/` |
 | `just live-container` | build the live ISO into `out/` |
 | `just vm` | boot the live ISO in a UEFI QEMU VM |
 

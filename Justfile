@@ -14,7 +14,7 @@ check kdots="../kdots":
     podman run --rm -it -v "$PWD:/kansora:Z" -v "$(realpath {{ kdots }}):/kdots:Z" -w /kansora {{ container }} \
         bash -c 'build-scripts/ci-setup && STRICT=1 build-scripts/check /kdots out/check'
 
-# Build the kansora + kansora-dots RPMs and dnf repo into out/repo, as CI does
+# Build the kansora + kansora-dots RPMs and per-release dnf repos into out/repo/<N>/, as CI does
 # (expects the kdots repo checked out next to this one)
 repo kdots="../kdots":
     podman run --rm -it -v "$PWD:/src:Z" -v "$(realpath {{ kdots }}):/kdots:Z" -w /src {{ container }} \

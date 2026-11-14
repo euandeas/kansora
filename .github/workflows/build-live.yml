@@ -76,11 +76,11 @@ jobs:
                              git-core make rpm-build systemd-rpm-macros createrepo_c cpio
                          git config --global --add safe.directory "*"
                          build-scripts/build-repo _kdots out/pkgs
-                         export KANSORA_REPO=out/pkgs/repo
+                         export KANSORA_REPO=out/pkgs/repo/45
                      fi
                      build-scripts/build-live out'
           ls -la out
-          if [ -n "$TEST_BUILD" ] && [ ! -d out/pkgs/repo ]; then
+          if [ -n "$TEST_BUILD" ] && [ ! -d out/pkgs/repo/45 ]; then
               echo "Test ISO was built from the published packages, not this branch's" >&2
               exit 1
           fi

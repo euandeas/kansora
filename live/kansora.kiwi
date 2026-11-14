@@ -69,7 +69,7 @@
 		<source path="https://download.copr.fedorainfracloud.org/results/duxlabs/dux-repo/fedora-$releasever-$basearch/"/>
 	</repository>
 	<repository type="rpm-md" alias="kansora" package_gpgcheck="false" repository_gpgcheck="false">
-		<source path="https://euandeas.github.io/kansora/repo/"/>
+		<source path="https://euandeas.github.io/kansora/repo/$releasever/"/>
 	</repository>
 
 	<packages type="bootstrap">

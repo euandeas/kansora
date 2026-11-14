@@ -46,11 +46,16 @@ jobs:
         run: |
           {
             echo '<!doctype html><meta charset="utf-8"><title>Kansora repo</title>'
-            echo '<h1>Kansora dnf repo</h1><p>Used by the Kansora installer and <code>kansora-repos</code>.</p><ul>'
-            for f in _site/repo/*.rpm; do n="$(basename "$f")"; echo "<li><a href=\"repo/$n\">$n</a></li>"; done
+            echo '<h1>Kansora dnf repo</h1><p>One repo per Fedora release, used by the Kansora installer and <code>kansora-repos</code>.</p><ul>'
+            for d in _site/repo/*/; do
+              rel="$(basename "$d")"
+              echo "<li>Fedora $rel: <code>repo/$rel/</code><ul>"
+              for f in "$d"*.rpm; do n="$(basename "$f")"; echo "<li><a href=\"repo/$rel/$n\">$n</a></li>"; done
+              echo '</ul></li>'
+            done
             echo '</ul>'
           } > _site/index.html
-          test -f _site/repo/repodata/repomd.xml
+          test -f _site/repo/45/repodata/repomd.xml
 
       - uses: actions/upload-pages-artifact@v3
         with:

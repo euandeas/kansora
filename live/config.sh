@@ -1,7 +1,8 @@
 #!/bin/bash
-# kiwi runs this inside the image after installing packages. Most of Kansora's
-# setup already happens in the kansora package's scriptlets (presets, greetd,
-# boot splash, GRUB menu); this covers what only an image build needs.
+# kiwi runs this inside the image after installing packages. Kansora's own setup
+# (services from its presets, graphical target, greetd, boot splash, GRUB menu)
+# happens in the kansora package's scriptlets; this covers what only an image
+# build needs.
 set -euxo pipefail
 
 test -f /.kconfig && . /.kconfig
@@ -23,8 +24,3 @@ passwd -l root
 
 # Live session: livesys runs /usr/libexec/livesys/sessions.d/livesys-niri
 echo 'livesys_session="niri"' > /etc/sysconfig/livesys
-
-# Services: greeter, networking, encrypted DNS, automatic updates
-systemctl set-default graphical.target
-systemctl enable greetd.service NetworkManager.service systemd-resolved.service dnf5-automatic.timer
-systemctl disable NetworkManager-wait-online.service flatpak-add-fedora-repos.service || :

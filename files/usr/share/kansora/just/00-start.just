@@ -120,20 +120,19 @@ enable-nvidia:
     if mokutil --sb-state 2>/dev/null | grep -q 'SecureBoot enabled'; then
         echo
         echo "Secure Boot is on: the driver is signed with this machine's own key, which"
-        echo "has to be enrolled once. Choose a one-time password, then at the next boot"
-        echo "pick 'Enroll MOK' and enter it."
-        sudo mokutil --import /etc/pki/akmods/certs/public_key.der
+        echo "has to be enrolled once."
+        kansora enroll-secure-boot-key
     fi
     echo
     echo "Done. Reboot to switch to the NVIDIA driver."
 
-# Enrol the akmods signing key so NVIDIA modules load with Secure Boot on (NVIDIA ISO)
+# Enrol this machine's NVIDIA signing key for Secure Boot (enable-nvidia does this; rerun if the enrolment at boot was missed)
 enroll-secure-boot-key:
     #!/usr/bin/bash
     set -euo pipefail
     key=/etc/pki/akmods/certs/public_key.der
     if [[ ! -e "$key" ]]; then
-        echo "No akmods key found. Is this the NVIDIA image?" >&2
+        echo "No akmods signing key yet: run kansora enable-nvidia first." >&2
         exit 1
     fi
     echo "Choose a one-time password. At the next boot, pick 'Enroll MOK' and enter it."
