@@ -145,6 +145,8 @@ dracut defaults for niri on NVIDIA. Needs the RPM Fusion free and nonfree repos.
 Summary:        Live ISO session for Kansora
 Requires:       kansora = %{version}-%{release}
 Requires:       livesys-scripts
+# livesys-niri writes the live user's DMS settings with it (Anaconda needs it anyway)
+Requires:       python3
 # Owners of the profile and branding directories
 Requires:       anaconda-core
 Requires:       cockpit-ws
